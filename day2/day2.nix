@@ -14,18 +14,7 @@
       A / X -> Rock, 1
       B / Y -> Paper, 2
       C / Z -> Scissors, 3
-
-   Rock > Scissors
-   Rock < Paper
-
-   Scissors > Paper
-   Scissors < Rock
-
-   Paper > Rock
-   Paper < Scissors
 */
-
-# (rock, paper)
 
 let
   pkgs = import <nixpkgs> { };
@@ -63,11 +52,18 @@ let
     };
   };
 
+  partTwoStrat = rec {
+    X = "lose";
+    Y = "draw";
+    Z = "win";
+  };
+
   # input = builtins.readFile ./example.txt;
   input = builtins.readFile ./input.txt;
   letterPairs = lib.splitString "\n" input;
   versus = builtins.map (lib.splitString " ") letterPairs;
 
+  # Part 1
   generateMoves = versus: {
     them = moveLookup.${builtins.elemAt versus 0};
     us = moveLookup.${builtins.elemAt versus 1};
@@ -76,12 +72,45 @@ let
   moves = builtins.map generateMoves versus;
 
   # { them = "rock"; us = "paper"; } -> points tally for us
-  pointsForHand = moves: movePoints.${moves.us}.points;
-  pointsForMatch = moves:
-    if movePoints.${moves.us}.beats == moves.them then
+  pointsForHand = m: (movePoints.${m.us}).points;
+  pointsForMatch = m:
+    if movePoints.${m.us}.beats == m.them then
       resultsPoints.win
-    else if moves.us == moves.them then
+    else if m.us == m.them then
       resultsPoints.draw
     else
       resultsPoints.lose;
-in listSum (builtins.map (x: (pointsForHand x + pointsForMatch x)) moves)
+
+  # Part 2
+  # Given a hand you need to win against, return the points won for playing the appropriate hand.
+  winAgainstAttr = y:
+    builtins.filter (x: x.beats == y) (builtins.attrValues movePoints);
+  pointsToWinAgainst = x: (builtins.elemAt (winAgainstAttr x) 0)."points";
+
+  loseAgainstAttr = y:
+    lib.filterAttrs (n: v: n != y && v.beats != y) movePoints;
+  pointsToLoseAgainst = x:
+    (builtins.elemAt (builtins.attrValues (loseAgainstAttr x)) 0)."points";
+
+  generateStrat = versus: {
+    them = moveLookup.${builtins.elemAt versus 0};
+    us = partTwoStrat.${builtins.elemAt versus 1};
+  };
+
+  strats = builtins.map generateStrat versus;
+
+  pointsForResult = strats: resultsPoints.${strats.us};
+
+  pointsForStrat = strats:
+    if strats.us == "win" then
+      pointsToWinAgainst strats.them
+    else if strats.us == "draw" then
+      (movePoints.${strats.them}).points
+    else
+      pointsToLoseAgainst strats.them;
+in {
+  part1 =
+    listSum (builtins.map (x: (pointsForHand x + pointsForMatch x)) moves);
+  part2 =
+    listSum (builtins.map (x: (pointsForResult x + pointsForStrat x)) strats);
+}
