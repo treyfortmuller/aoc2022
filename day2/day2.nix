@@ -1,20 +1,19 @@
-/* The winner of the whole tournament is the player with the highest score.
-      Your total score is the sum of your scores for each round. The score for
-      a single round is the score for the shape you selected:
-      - 1 for Rock
-      - 2 for Paper
-      - 3 for Scissors
+# The winner of the whole tournament is the player with the highest score.
+# Your total score is the sum of your scores for each round. The score for
+# a single round is the score for the shape you selected:
+# - 1 for Rock
+# - 2 for Paper
+# - 3 for Scissors
 
-      Plus the score for the outcome of the round:
-      - 0 if you lost
-      - 3 if the round was a draw
-      - 6 if you won
+# Plus the score for the outcome of the round:
+# - 0 if you lost
+# - 3 if the round was a draw
+# - 6 if you won
 
-      Key:
-      A / X -> Rock, 1
-      B / Y -> Paper, 2
-      C / Z -> Scissors, 3
-*/
+# Key:
+# A / X -> Rock, 1
+# B / Y -> Paper, 2
+# C / Z -> Scissors, 3
 
 let
   pkgs = import <nixpkgs> { };
