@@ -98,9 +98,7 @@ let
   };
 
   strats = builtins.map generateStrat versus;
-
   pointsForResult = strats: resultsPoints.${strats.us};
-
   pointsForStrat = strats:
     if strats.us == "win" then
       pointsToWinAgainst strats.them
