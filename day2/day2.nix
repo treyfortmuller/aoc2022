@@ -63,14 +63,13 @@ let
   versus = builtins.map (lib.splitString " ") letterPairs;
 
   # Part 1
+  # X, Y, Z correspond to our moves
   generateMoves = versus: {
     them = moveLookup.${builtins.elemAt versus 0};
     us = moveLookup.${builtins.elemAt versus 1};
   };
 
   moves = builtins.map generateMoves versus;
-
-  # { them = "rock"; us = "paper"; } -> points tally for us
   pointsForHand = m: (movePoints.${m.us}).points;
   pointsForMatch = m:
     if movePoints.${m.us}.beats == m.them then
@@ -81,7 +80,7 @@ let
       resultsPoints.lose;
 
   # Part 2
-  # Given a hand you need to win against, return the points won for playing the appropriate hand.
+  # X, Y, Z correspond to the desired outcome of the match
   winAgainstAttr = y:
     builtins.filter (x: x.beats == y) (builtins.attrValues movePoints);
   pointsToWinAgainst = x: (builtins.elemAt (winAgainstAttr x) 0)."points";
