@@ -33,3 +33,36 @@ pipe to `nixfmt` directly to pretty print the output of `nix-instantiate` for at
 ```
 nix-instantiate --eval --strict ./day3.nix --show-trace | nixfmt
 ```
+
+You can get docs directly in the REPL (seemingly only for `builtins` though)
+
+```
+nix-repl> :doc builtins.map 
+Synopsis: builtins.map f list
+
+    Apply the function f to each element in the list list. For example,
+
+    | map (x: "foo" + x) [ "bar" "bla" "abc" ]
+
+    evaluates to [ "foobar" "foobla" "fooabc" ].
+```
+
+Naively trying to write down a recursive function in the REPL you run into
+
+```
+nix-repl> factorial = x: if x == 0 then 1 else x * factorial (x - 1)      
+error: undefined variable 'factorial'
+
+       at «string»:1:31:
+
+            1|  x: if x == 0 then 1 else x * factorial (x - 1)
+             |                               ^
+```
+
+But you can actual use a `let` expression to delay evaluation, this works
+
+```
+nix-repl> let factorial = x: if x == 0 then 1 else x * factorial (x - 1);
+          in factorial 5
+120
+```

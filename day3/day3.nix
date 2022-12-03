@@ -32,9 +32,16 @@ let
   sharedContents = map (x: builtins.head (lib.intersectLists x.first x.second))
     compartmentContentLists;
 
-in listSum (map getPriority sharedContents)
+  # Part 2
+  chunksOf = n: l:
+    if (length l == 0) then
+      [ ]
+    else
+      lib.singleton (lib.take n l) ++ chunksOf n (lib.drop n l);
 
-# in {
-#   part1 = 0;
-#   part2 = 0;
-# }
+in {
+  part1 = listSum (map getPriority sharedContents);
+
+  # TODO: complete part2 from here
+  part2 = chunksOf 3 [ 1 2 3 4 5 6 ];
+}
