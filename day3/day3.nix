@@ -16,6 +16,7 @@ let
       priorityLookup = lib.zipLists indices alphabetSoup;
     in (head (filter (x: x.snd == l) priorityLookup)).fst;
 
+  # Part 1
   # input = readFile ./example.txt;
   input = readFile ./input.txt;
   rucksacks = lib.splitString "\n" input;
@@ -30,12 +31,12 @@ let
         lib.stringToCharacters (substring (halfLen c) (stringLength c) c);
     };
 
-  # Part 2
   compartmentContentLists = map compartmentSplit rucksacks;
 
   sharedContents =
     map (x: head (lib.intersectLists x.first x.second)) compartmentContentLists;
-
+  
+  # Part 2
   tripleAttr = l: {
     first = elemAt l 0;
     second = elemAt l 1;
