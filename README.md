@@ -27,3 +27,9 @@ nix-repl> builtins.map (lib.splitString " ") matches
 nix-repl> :p builtins.map (lib.splitString " ") matches
 [ [ "A" "Y" ] [ "B" "X" ] [ "C" "Z" ] ]
 ```
+
+pipe to `nixfmt` directly to pretty print the output of `nix-instantiate` for attrsets, lists, etc. 
+
+```
+nix-instantiate --eval --strict ./day3.nix --show-trace | nixfmt
+```
