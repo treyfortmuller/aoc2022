@@ -48,7 +48,7 @@ let
     else
       lib.singleton (tripleAttr (lib.take 3 l)) ++ chunksOfThree (lib.drop 3 l);
 
-  # Given a three-element attrset of strings representing the contents of a group of rucksack, 
+  # Given a three-element attrset of strings representing the contents of a group of rucksacks, 
   # find the shared element of all 3 sacks.
   findShared = attrset:
     let
